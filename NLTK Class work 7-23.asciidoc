@@ -1,0 +1,481 @@
++*In[1]:*+
+[source, ipython3]
+----
+import re
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords, wordnet
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+# Download NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+----
+
+
++*Out[1]:*+
+----
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package stopwords to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+True----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+
+# Download NLTK resources
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
+# Sample sentence
+sentence = "The quick brown fox jumps over the lazy dog."
+
+# Tokenize the sentence
+tokens = word_tokenize(sentence)
+
+# Perform POS tagging
+pos_tags = pos_tag(tokens)
+
+# Print the tokens with their POS tags
+print("Tokens and POS Tags:")
+for token, tag in pos_tags:
+    print(f"{token}: {tag}")
+----
+
+
++*Out[2]:*+
+----
+Tokens and POS Tags:
+The: DT
+quick: JJ
+brown: NN
+fox: NN
+jumps: VBZ
+over: IN
+the: DT
+lazy: JJ
+dog: NN
+.: .
+
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+import re
+
+# Sample sentence
+sentence = "Hello, World! This is a sample sentence with punctuation."
+
+# Remove special characters and punctuation
+cleaned_sentence = re.sub(r'[^\w\s]', '', sentence)
+
+print("Original Sentence:", sentence)
+print("Cleaned Sentence:", cleaned_sentence)
+----
+
+
++*Out[3]:*+
+----
+Original Sentence: Hello, World! This is a sample sentence with punctuation.
+Cleaned Sentence: Hello World This is a sample sentence with punctuation
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+# Sample sentence
+sentence = "Hello, World! This is a Sample Sentence."
+
+# Convert to lowercase
+lowercase_sentence = sentence.lower()
+
+print("Original Sentence:", sentence)
+print("Lowercase Sentence:", lowercase_sentence)
+----
+
+
++*Out[4]:*+
+----
+Original Sentence: Hello, World! This is a Sample Sentence.
+Lowercase Sentence: hello, world! this is a sample sentence.
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+import nltk
+
+# Download NLTK stopwords
+nltk.download('stopwords')
+nltk.download('punkt')
+
+# Sample sentence
+sentence = "This is a sample sentence demonstrating stop word removal."
+
+# Tokenize the sentence
+tokens = word_tokenize(sentence)
+
+# Remove stop words
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+print("Original Sentence:", sentence)
+print("Filtered Tokens:", filtered_tokens)
+----
+
+
++*Out[5]:*+
+----
+Original Sentence: This is a sample sentence demonstrating stop word removal.
+Filtered Tokens: ['sample', 'sentence', 'demonstrating', 'stop', 'word', 'removal', '.']
+
+[nltk_data] Downloading package stopwords to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+from nltk.stem import PorterStemmer
+
+# Initialize the Porter Stemmer
+stemmer = PorterStemmer()
+
+# Sample words
+words = ["running", "runs", "ran", "easily", "fairly"]
+
+# Apply stemming
+stemmed_words = [stemmer.stem(word) for word in words]
+
+print("Original Words:", words)
+print("Stemmed Words:", stemmed_words)
+----
+
+
++*Out[6]:*+
+----
+Original Words: ['running', 'runs', 'ran', 'easily', 'fairly']
+Stemmed Words: ['run', 'run', 'ran', 'easili', 'fairli']
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet
+import nltk
+
+# Download NLTK resources
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('averaged_perceptron_tagger')
+
+# Initialize the WordNet Lemmatizer
+lemmatizer = WordNetLemmatizer()
+
+# Sample words
+words = ["running", "runs", "ran", "easily", "fairly"]
+
+# Function to get part of speech for lemmatization
+def get_wordnet_pos(word):
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ, "N": wordnet.NOUN, "V": wordnet.VERB, "R": wordnet.ADV}
+    return tag_dict.get(tag, wordnet.NOUN)
+
+# Apply lemmatization
+lemmatized_words = [lemmatizer.lemmatize(word, get_wordnet_pos(word)) for word in words]
+
+print("Original Words:", words)
+print("Lemmatized Words:", lemmatized_words)
+----
+
+
++*Out[7]:*+
+----
+[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package omw-1.4 to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package omw-1.4 is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+
+Original Words: ['running', 'runs', 'ran', 'easily', 'fairly']
+Lemmatized Words: ['run', 'run', 'ran', 'easily', 'fairly']
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+from bs4 import BeautifulSoup
+
+# Sample HTML text
+html_text = "<html><head><title>Title</title></head><body><p>This is a <b>sample</b> paragraph.</p></body></html>"
+
+# Remove HTML tags
+soup = BeautifulSoup(html_text, "html.parser")
+cleaned_text = soup.get_text()
+
+print("Original HTML:", html_text)
+print("Cleaned Text:", cleaned_text)
+----
+
+
++*Out[8]:*+
+----
+Original HTML: <html><head><title>Title</title></head><body><p>This is a <b>sample</b> paragraph.</p></body></html>
+Cleaned Text: TitleThis is a sample paragraph.
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+# Sample sentence
+sentence = "There are 123 apples and 456 oranges."
+
+# Remove numbers
+cleaned_sentence = re.sub(r'\d+', '', sentence)
+
+print("Original Sentence:", sentence)
+print("Cleaned Sentence:", cleaned_sentence)
+----
+
+
++*Out[9]:*+
+----
+Original Sentence: There are 123 apples and 456 oranges.
+Cleaned Sentence: There are  apples and  oranges.
+----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+from nltk.tokenize import word_tokenize
+
+# Sample sentence
+sentence = "This is a sample sentence for tokenization."
+
+# Tokenize the sentence
+tokens = word_tokenize(sentence)
+
+print("Original Sentence:", sentence)
+print("Tokens:", tokens)
+----
+
+
++*Out[10]:*+
+----
+Original Sentence: This is a sample sentence for tokenization.
+Tokens: ['This', 'is', 'a', 'sample', 'sentence', 'for', 'tokenization', '.']
+----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+import re
+import nltk
+from bs4 import BeautifulSoup
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords, wordnet
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+# Download NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('averaged_perceptron_tagger')
+
+# Initialize the Porter Stemmer and WordNet Lemmatizer
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('english'))
+
+# Sample corpus
+sentencescombined_sentences = ["I love this product! It's amazing.","<html><head><title>Title</title></head><body><p>This is a <b>sample</b> paragraph.</p></body></html>",     "He bought 123 apples and 456 oranges.",     "Running is a great way to stay fit.",     "The quick brown fox jumps over the lazy dog.",     "She sells sea shells by the sea shore.",     "COVID-19 has impacted global economies significantly.", "The new iPhone 13 features a sleek design and powerful performance.", "Artificial intelligence and machine learning are transforming industries.", "HTML, CSS, and JavaScript are essential technologies for web development." ]
+
+# Function to preprocess text
+def preprocess_text(text):
+    # Remove HTML tags
+    text = BeautifulSoup(text, "html.parser").get_text()
+    # Convert to lowercase
+    text = text.lower()
+    # Remove special characters and punctuation
+    text = re.sub(r'[^\w\s]', '', text)
+    # Remove numbers
+    text = re.sub(r'\d+', '', text)
+    # Tokenize
+    tokens = word_tokenize(text)
+    # Remove stop words
+    filtered_tokens = [word for word in tokens if word not in stop_words]
+    # Apply stemming
+    stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
+    # Apply lemmatization
+    lemmatized_tokens = [lemmatizer.lemmatize(word, get_wordnet_pos(word)) for word in filtered_tokens]
+    return {
+        'original': text,
+        'tokens': tokens,
+        'filtered_tokens': filtered_tokens,
+        'stemmed_tokens': stemmed_tokens,
+        'lemmatized_tokens': lemmatized_tokens
+    }
+
+# Function to get the part of speech tag for lemmatization
+def get_wordnet_pos(word):
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ, "N": wordnet.NOUN, "V": wordnet.VERB, "R": wordnet.ADV}
+    return tag_dict.get(tag, wordnet.NOUN)
+
+# Process each document in the corpus
+for document in corpus:
+    result = preprocess_text(document)
+    print("Original Document:", document)
+    print("Text After HTML Removal:", result['original'])
+    print("Tokens:", result['tokens'])
+    print("Filtered Tokens:", result['filtered_tokens'])
+    print("Stemmed Tokens:", result['stemmed_tokens'])
+    print("Lemmatized Tokens:", result['lemmatized_tokens'])
+    print("-" * 50)
+----
+
+
++*Out[13]:*+
+----
+Original Document: I love this product! It's amazing.
+Text After HTML Removal: i love this product its amazing
+Tokens: ['i', 'love', 'this', 'product', 'its', 'amazing']
+Filtered Tokens: ['love', 'product', 'amazing']
+Stemmed Tokens: ['love', 'product', 'amaz']
+Lemmatized Tokens: ['love', 'product', 'amaze']
+--------------------------------------------------
+Original Document: <html><head><title>Title</title></head><body><p>This is a <b>sample</b> paragraph.</p></body></html>
+Text After HTML Removal: titlethis is a sample paragraph
+Tokens: ['titlethis', 'is', 'a', 'sample', 'paragraph']
+Filtered Tokens: ['titlethis', 'sample', 'paragraph']
+Stemmed Tokens: ['titlethi', 'sampl', 'paragraph']
+Lemmatized Tokens: ['titlethis', 'sample', 'paragraph']
+--------------------------------------------------
+Original Document: He bought 123 apples and 456 oranges.
+Text After HTML Removal: he bought  apples and  oranges
+Tokens: ['he', 'bought', 'apples', 'and', 'oranges']
+Filtered Tokens: ['bought', 'apples', 'oranges']
+Stemmed Tokens: ['bought', 'appl', 'orang']
+Lemmatized Tokens: ['bought', 'apple', 'orange']
+--------------------------------------------------
+Original Document: Running is a great way to stay fit.
+Text After HTML Removal: running is a great way to stay fit
+Tokens: ['running', 'is', 'a', 'great', 'way', 'to', 'stay', 'fit']
+Filtered Tokens: ['running', 'great', 'way', 'stay', 'fit']
+Stemmed Tokens: ['run', 'great', 'way', 'stay', 'fit']
+Lemmatized Tokens: ['run', 'great', 'way', 'stay', 'fit']
+--------------------------------------------------
+Original Document: The quick brown fox jumps over the lazy dog.
+Text After HTML Removal: the quick brown fox jumps over the lazy dog
+Tokens: ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']
+Filtered Tokens: ['quick', 'brown', 'fox', 'jumps', 'lazy', 'dog']
+Stemmed Tokens: ['quick', 'brown', 'fox', 'jump', 'lazi', 'dog']
+Lemmatized Tokens: ['quick', 'brown', 'fox', 'jump', 'lazy', 'dog']
+--------------------------------------------------
+Original Document: She sells sea shells by the sea shore.
+Text After HTML Removal: she sells sea shells by the sea shore
+Tokens: ['she', 'sells', 'sea', 'shells', 'by', 'the', 'sea', 'shore']
+Filtered Tokens: ['sells', 'sea', 'shells', 'sea', 'shore']
+Stemmed Tokens: ['sell', 'sea', 'shell', 'sea', 'shore']
+Lemmatized Tokens: ['sell', 'sea', 'shell', 'sea', 'shore']
+--------------------------------------------------
+Original Document: COVID-19 has impacted global economies significantly.
+Text After HTML Removal: covid has impacted global economies significantly
+Tokens: ['covid', 'has', 'impacted', 'global', 'economies', 'significantly']
+Filtered Tokens: ['covid', 'impacted', 'global', 'economies', 'significantly']
+Stemmed Tokens: ['covid', 'impact', 'global', 'economi', 'significantli']
+Lemmatized Tokens: ['covid', 'impact', 'global', 'economy', 'significantly']
+--------------------------------------------------
+Original Document: The new iPhone 13 features a sleek design and powerful performance.
+Text After HTML Removal: the new iphone  features a sleek design and powerful performance
+Tokens: ['the', 'new', 'iphone', 'features', 'a', 'sleek', 'design', 'and', 'powerful', 'performance']
+Filtered Tokens: ['new', 'iphone', 'features', 'sleek', 'design', 'powerful', 'performance']
+Stemmed Tokens: ['new', 'iphon', 'featur', 'sleek', 'design', 'power', 'perform']
+Lemmatized Tokens: ['new', 'iphone', 'feature', 'sleek', 'design', 'powerful', 'performance']
+--------------------------------------------------
+Original Document: Artificial intelligence and machine learning are transforming industries.
+Text After HTML Removal: artificial intelligence and machine learning are transforming industries
+Tokens: ['artificial', 'intelligence', 'and', 'machine', 'learning', 'are', 'transforming', 'industries']
+Filtered Tokens: ['artificial', 'intelligence', 'machine', 'learning', 'transforming', 'industries']
+Stemmed Tokens: ['artifici', 'intellig', 'machin', 'learn', 'transform', 'industri']
+Lemmatized Tokens: ['artificial', 'intelligence', 'machine', 'learn', 'transform', 'industry']
+--------------------------------------------------
+Original Document: HTML, CSS, and JavaScript are essential technologies for web development.
+Text After HTML Removal: html css and javascript are essential technologies for web development
+Tokens: ['html', 'css', 'and', 'javascript', 'are', 'essential', 'technologies', 'for', 'web', 'development']
+Filtered Tokens: ['html', 'css', 'javascript', 'essential', 'technologies', 'web', 'development']
+Stemmed Tokens: ['html', 'css', 'javascript', 'essenti', 'technolog', 'web', 'develop']
+Lemmatized Tokens: ['html', 'cs', 'javascript', 'essential', 'technology', 'web', 'development']
+--------------------------------------------------
+
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package stopwords to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package omw-1.4 to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package omw-1.4 is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     C:\Users\lilip\AppData\Roaming\nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
